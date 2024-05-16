@@ -13,16 +13,23 @@ void checkDir(){
         //const char* Wdir = "C:/Users/apples";
         //verzin nog eventjes iets later
     #else 
-        const char* Udir = "~/.config/freefetch";
-        const char* Ufile = "~/.config/freefetch/fetch.data";
-        struct stat sb;
-
-        if(stat(Ufile, &sb) == 0 && !(sb.st_mode & S_IFDIR)){
-            cout << "hoi";
+        const char* dir = "/home/$(whoami)/.config/freefetch";
+        const char* file = "/home/$(whoami)/.config/freefetch/fetch.data";
+        struct stat info;
+        struct stat info2;
+        if(stat(dir, &info) != 0){
+            const char* mkdir = "mkdir ~/.config/freefetch";
+            system(mkdir);
+            if(stat(file, &info2) != 0){
+                const char* touch = "touch ~/.config/freefetch/fetch.data";
+                system(touch);
+                }
+            }
+        if(stat(dir, &info) == 0 && stat(file, &info2) != 0){
+            const char* touch = "touch ~/.config/freefetch/fetch.data";
+            system(touch);
         }
-        else{
-            cout << "hoi";
-        }
+        
     #endif
         return;
 };
@@ -33,15 +40,21 @@ void fetchSystem(){
         //verzin nog eventjes iets voor Windows implementation
     #else
         //system("mkdir ~/.config/freefetch && touch ~/.config/freefetch/fetch.data");
-        system("uname -r >> ~/.config/freefetch/fetch.data");                              //kernel naam & build
-        system("cat /etc/hostname >> ~/.config/freefetch/fetch.data");                     //Hostname
-        system("cat /proc/meminfo >> ~/.config/freefetch/fetch.data");         //memoryinfo
+        const char* mem = "cat /proc/meminfo | grep \"MemTotal\" >> ~/.config/freefetch/fetch.data && cat /proc/meminfo | grep \"MemFree\" >> ~/.config/freefetch/fetch.data";
+        const char* cpu = "cat /proc/cpuinfo | grep \"model name\" >> ~/.config/freefetch/fetch.data";
+        const char* gpu = "lspci | grep -i --color 'vga\\|3d\\|2d' >> ~/.config/freefetch/fetch.data";
+        const char* kernel = "uname -r >> ~/.config/freefetch/fetch.data";
+        const char* hostname = "cat /etc/hostname >> ~/.config/freefetch/fetch.data";
+        string commands[] = {mem, cpu, gpu, kernel, hostname};
+        for (int i = 0; i < 5; i++){
+            system(commands[i].c_str());
+        }
     #endif
         return;
 };
 
 int main(){
-    //fetchSystem();
-    checkDir();
+    //checkDir();
+    fetchSystem();
     return 0;
 };
