@@ -2,6 +2,8 @@
 #include <bits/stdc++.h>
 #include <string>
 #include <sys/stat.h>
+#include <filesystem>
+#include <cstdlib>
 
 using namespace std;
 
@@ -10,29 +12,23 @@ void checkDir();
 
 void checkDir(){
     #ifdef _WIN32
-        //const char* Wdir = "C:/Users/apples";
-        //verzin nog eventjes iets later
+        // Windows specific code
     #else 
-        const char* dir = "/home/$(whoami)/.config/freefetch";
+        const char* sdir = "/home/$(whoami)/.config/freefetch";
         const char* file = "/home/$(whoami)/.config/freefetch/fetch.data";
-        struct stat info;
-        struct stat info2;
-        if(stat(dir, &info) != 0){
-            const char* mkdir = "mkdir ~/.config/freefetch";
-            system(mkdir);
-            if(stat(file, &info2) != 0){
-                const char* touch = "touch ~/.config/freefetch/fetch.data";
-                system(touch);
-                }
-            }
-        if(stat(dir, &info) == 0 && stat(file, &info2) != 0){
-            const char* touch = "touch ~/.config/freefetch/fetch.data";
-            system(touch);
+        const char* sfile = "touch /home/$(whoami)/.config/freefetch/fetch.data";
+        string home = std::getenv("HOME");
+        filesystem::path dir = home + "/.config/freefetch";
+
+        if(!filesystem::exists(dir)){
+            filesystem::create_directories(dir);
         }
-        
+
+        if(!filesystem::exists(file)){
+            system(sfile);
+        }
     #endif
-        return;
-};
+}
 
 void fetchSystem(){
     #ifdef _WIN32
@@ -50,11 +46,10 @@ void fetchSystem(){
             system(commands[i].c_str());
         }
     #endif
-        return;
 };
 
 int main(){
-    //checkDir();
-    fetchSystem();
+    checkDir();
+    //fetchSystem();
     return 0;
 };
