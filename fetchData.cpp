@@ -28,14 +28,13 @@ void checkDir(){
             system(sfile);
         }
     #endif
-}
+};
 
 void fetchSystem(){
     #ifdef _WIN32
         //system("systeminfo");
         //verzin nog eventjes iets voor Windows implementation
     #else
-        //system("mkdir ~/.config/freefetch && touch ~/.config/freefetch/fetch.data");
         const char* mem = "cat /proc/meminfo | grep \"MemTotal\" >> ~/.config/freefetch/fetch.data && cat /proc/meminfo | grep \"MemFree\" >> ~/.config/freefetch/fetch.data";
         const char* cpu = "cat /proc/cpuinfo | grep \"model name\" >> ~/.config/freefetch/fetch.data";
         const char* gpu = "lspci | grep -i --color 'vga\\|3d\\|2d' >> ~/.config/freefetch/fetch.data";
@@ -46,10 +45,16 @@ void fetchSystem(){
             system(commands[i].c_str());
         }
     #endif
-};
+};      // Moet ik dit veranderen naar een /tmp/ bestand? Of een tijdelijke variabele?
+
+void displayFetch(){
+    const char* data = "cat /home/$(whoami)/.config/freefetch/fetch.data"; 
+    system(data);
+    };
 
 int main(){
     checkDir();
-    //fetchSystem();
+    fetchSystem();
+    displayFetch();
     return 0;
 };
