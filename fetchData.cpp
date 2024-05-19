@@ -10,6 +10,8 @@ const char* tempFile = "/tmp/freefetch.$(whoami)";
 
 void fetchSystem();
 void checkDir();
+void displayfetch();
+void imagesDistros();
 
 void checkDir(){
     #ifdef _WIN32
@@ -43,6 +45,9 @@ void fetchSystem(){
 
 void displayFetch(){
     const char* data = "cat /tmp/freefetch.$(whoami)"; 
+    // cout.setf(ios::right, ios::adjustfield);
+    // cout.width(50);
+    imagesDistros();
     system(data);
     };
 
@@ -59,4 +64,27 @@ int main(){
 #endif
 
 return 0;
+};
+
+void imagesDistros(){
+          char* archLinux = "                         -`                        \n"
+                            "                        .o+`                       \n"
+                            "                        ooo/                       \n"
+                            "                      +oooo:                       \n"
+                            "                      +oooooo:                     \n"
+                            "                    -+oooooo+:                     \n"
+                            "                    /:-:++oooo+:                   \n"
+                            "                  /++++/+++++++:                   \n"
+                            "                  /++++++++++++++:                 \n"
+                            "                /+++ooooooooooooo/`                \n"
+                            "               ./ooosssso++osssssso+`              \n"
+                            "             .oossssso-````/ossssss+`              \n"
+                            "             -osssssso.      :ssssssso.            \n"
+                            "           :osssssss/        osssso+++.            \n"
+                            "           /ossssssss/        +ssssooo/-           \n"
+                            "         /ossssso+/:-        -:/+osssso+-          \n"
+                            "         +sso+:-`                 `.-/+oso:        \n"
+                            "       ++:.                           `-/+/        \n"
+                            "       .`                                 `/\"      \n";
+            cout << archLinux << endl;
 };
