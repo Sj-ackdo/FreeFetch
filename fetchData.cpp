@@ -62,7 +62,7 @@ int main(){
 	displayFetch();
 	system("rm /tmp/freefetch.$(whoami)");
 #endif
-
+//wat
 return 0;
 };
 
