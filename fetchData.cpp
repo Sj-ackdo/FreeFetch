@@ -4,8 +4,9 @@
 #include <sys/stat.h>
 #include <filesystem>
 #include <cstdlib>
-
 using namespace std;
+
+const char* tempFile = "/tmp/freefetch.$(whoami)";
 
 void fetchSystem();
 void checkDir();
@@ -14,17 +15,9 @@ void checkDir(){
     #ifdef _WIN32
         // Windows specific code
     #else 
-        const char* sdir = "/home/$(whoami)/.config/freefetch";
-        const char* file = "/home/$(whoami)/.config/freefetch/fetch.data";
-        const char* sfile = "touch /home/$(whoami)/.config/freefetch/fetch.data";
-        string home = std::getenv("HOME");
-        filesystem::path dir = home + "/.config/freefetch";
+	const char* sfile = "touch /tmp/freefetch.$(whoami)";
 
-        if(!filesystem::exists(dir)){
-            filesystem::create_directories(dir);
-        }
-
-        if(!filesystem::exists(file)){
+        if(!filesystem::exists(tempFile)){
             system(sfile);
         }
     #endif
@@ -35,26 +28,35 @@ void fetchSystem(){
         //system("systeminfo");
         //verzin nog eventjes iets voor Windows implementation
     #else
-        const char* mem = "cat /proc/meminfo | grep \"MemTotal\" >> ~/.config/freefetch/fetch.data && cat /proc/meminfo | grep \"MemFree\" >> ~/.config/freefetch/fetch.data";
-        const char* cpu = "cat /proc/cpuinfo | grep \"model name\" >> ~/.config/freefetch/fetch.data";
-        const char* gpu = "lspci | grep -i --color 'vga\\|3d\\|2d' >> ~/.config/freefetch/fetch.data";
-        const char* kernel = "uname -r >> ~/.config/freefetch/fetch.data";
-        const char* hostname = "cat /etc/hostname >> ~/.config/freefetch/fetch.data";
+
+	const char* mem = "cat /proc/meminfo | grep \"MemTotal\" >> /tmp/freefetch.$(whoami) && cat /proc/meminfo | grep \"MemFree\" >> /tmp/freefetch.$(whoami)";
+        const char* cpu = "cat /proc/cpuinfo | grep \"model name\" >> /tmp/freefetch.$(whoami)";
+        const char* gpu = "lspci | grep -i --color 'vga\\|3d\\|2d' >> /tmp/freefetch.$(whoami)";
+        const char* kernel = "uname -r >> /tmp/freefetch.$(whoami)";
+        const char* hostname = "cat /etc/hostname >> /tmp/freefetch.$(whoami)";
         string commands[] = {mem, cpu, gpu, kernel, hostname};
         for (int i = 0; i < 5; i++){
             system(commands[i].c_str());
         }
     #endif
-};      // Moet ik dit veranderen naar een /tmp/ bestand? Of een tijdelijke variabele?
+};      // Moet ik nu uberhaupt een create directory hebben voor Linux?
 
 void displayFetch(){
-    const char* data = "cat /home/$(whoami)/.config/freefetch/fetch.data"; 
+    const char* data = "cat /tmp/freefetch.$(whoami)"; 
     system(data);
     };
 
 int main(){
-    checkDir();
-    fetchSystem();
-    displayFetch();
-    return 0;
+    #ifdef _WIN32
+        checkDir();
+    	fetchSystem();
+    	displayFetch();
+    #else
+	checkDir();
+	fetchSystem();
+	displayFetch();
+	system("rm /tmp/freefetch.$(whoami)");
+#endif
+
+return 0;
 };
