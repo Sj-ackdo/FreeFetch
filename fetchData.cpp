@@ -69,7 +69,7 @@ int main(){
     #else
 	checkDir();
 	fetchSystem();
-    distroName();
+    	distroName();
 	displayFetch();
 	system("rm /tmp/freefetch.tmp");
     
