@@ -15,29 +15,6 @@ void displayfetch();
 void imagesDistros();
 void distroName();
 
-// istream& ignoreline(ifstream& in, ifstream::pos_type& pos)
-// {
-//     pos = in.tellg();
-//     return in.ignore(numeric_limits<streamsize>::max(), '\n');
-// };
-
-// string getLastLine(ifstream& in)
-// {
-//     ifstream::pos_type pos = in.tellg();
-
-//     ifstream::pos_type lastPos;
-//     while (in >> ws && ignoreline(in, lastPos))
-//         pos = lastPos;
-
-//     in.clear();
-//     in.seekg(pos);
-
-//     string line;
-//     getline(in, line);
-//     return line;
-// };
-
-
 void checkDir(){
     #ifdef _WIN32
         // Windows specific code
@@ -58,7 +35,7 @@ void fetchSystem(){
 
 	const char* mem = "cat /proc/meminfo | grep \"MemTotal\" >> /tmp/freefetch.tmp && cat /proc/meminfo | grep \"MemFree\" >> /tmp/freefetch.tmp";
         const char* cpu = "cat /proc/cpuinfo | grep \"model name\" >> /tmp/freefetch.tmp";
-        const char* gpu = "lspci | grep -i --color 'vga\\|3d\\|2d' >> /tmp/freefetch.tmp";
+        const char* gpu = "inxi -G | grep 'Device-1' | sed -e 's/^[ \t]*//' >> /tmp/freefetch.tmp";
         const char* kernel = "uname -r >> /tmp/freefetch.tmp";
         const char* hostname = "cat /etc/hostname >> /tmp/freefetch.tmp";
         string commands[] = {mem, cpu, gpu, kernel, hostname};
@@ -70,7 +47,6 @@ void fetchSystem(){
 
 void displayFetch(){
     const char* data = "cat /tmp/freefetch.tmp"; 
-
     imagesDistros();
     system(data);
 };
@@ -93,9 +69,10 @@ int main(){
     #else
 	checkDir();
 	fetchSystem();
-	displayFetch();
     distroName();
+	displayFetch();
 	system("rm /tmp/freefetch.tmp");
+    
 #endif
 return 0;
 };
@@ -103,34 +80,31 @@ return 0;
 void imagesDistros(){
     char* Debian = "cat /tmp/freefetch.tmp | grep 'Debian' >> /dev/null";
     char* Arch = "cat /tmp/freefetch.tmp | grep 'Arch' >> /dev/null";
+    char* Ubuntu = "cat /tmp/freefetch.tmp | grep 'Ubuntu' >> /dev/null";
 
-    vector<string> distros = {"Debian", "Arch"};
-
-    for (const auto& distro : distros) {
-        if (distro == "Debian") {
-            cout << "Debian" << endl;
-        } 
-        else if (distro == "Arch") {
-            char* archLinux =   "                         -`                        \n"
-                                "                        .o+`                       \n"
-                                "                        ooo/                       \n"
-                                "                      +oooo:                       \n"
-                                "                      +oooooo:                     \n"
-                                "                    -+oooooo+:                     \n"
-                                "                    /:-:++oooo+:                   \n"
-                                "                  /++++/+++++++:                   \n"
-                                "                  /++++++++++++++:                 \n"
-                                "                /+++ooooooooooooo/`                \n"
-                                "               ./ooosssso++osssssso+`              \n"
-                                "             .oossssso-````/ossssss+`              \n"
-                                "             -osssssso.      :ssssssso.            \n"
-                                "           :osssssss/        osssso+++.            \n"
-                                "           /ossssssss/        +ssssooo/-           \n"
-                                "         /ossssso+/:-        -:/+osssso+-          \n"
-                                "         +sso+:-`                 `.-/+oso:        \n"
-                                "       ++:.                           `-/+/        \n"
-                                "       .`                                 `/\"      \n";
-            cout << archLinux << endl;
-        }
-    }    
+    if (system("cat /tmp/freefetch.tmp | grep 'Debian' >> /dev/null") == 0) {
+        cout << "Debian" << endl;
+    } 
+    else if (system("cat /tmp/freefetch.tmp | grep 'Arch' >> /dev/null") == 0) {
+        char* archLinux =   "                         -`                        \n"
+                            "                        .o+`                       \n"
+                            "                        ooo/                       \n"
+                            "                      +oooo:                       \n"
+                            "                      +oooooo:                     \n"
+                            "                    -+oooooo+:                     \n"
+                            "                    /:-:++oooo+:                   \n"
+                            "                  /++++/+++++++:                   \n"
+                            "                  /++++++++++++++:                 \n"
+                            "                /+++ooooooooooooo/`                \n"
+                            "               ./ooosssso++osssssso+`              \n"
+                            "             .oossssso-````/ossssss+`              \n"
+                            "             -osssssso.      :ssssssso.            \n"
+                            "           :osssssss/        osssso+++.            \n"
+                            "           /ossssssss/        +ssssooo/-           \n"
+                            "         /ossssso+/:-        -:/+osssso+-          \n"
+                            "         +sso+:-`                 `.-/+oso:        \n"
+                            "       ++:.                           `-/+/        \n"
+                            "       .`                                 `/\"      \n";
+        cout << archLinux << endl;
+    } 
 };
