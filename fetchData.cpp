@@ -34,8 +34,8 @@ void fetchSystem(){
     #else
 
 	    const char* mem = "cat /proc/meminfo | grep \"MemTotal\" >> /tmp/freefetch.tmp && cat /proc/meminfo | grep \"MemFree\" >> /tmp/freefetch.tmp"; // Locate and save memory
-        const char* cpu = "cat /proc/cpuinfo | grep \"model name\" >> /tmp/freefetch.tmp"; // Save all CPU cores and their info
-        const char* gpu = "inxi -G | grep 'Device-1' | sed -e 's/^[ \t]*//' >> /tmp/freefetch.tmp"; // Save GPU
+        const char* cpu = "lscpu | grep 'Model name' >> /tmp/freefetch.tmp"; // Save all CPU cores and their info
+        const char* gpu = "lspci | grep 'VGA' >> /tmp/freefetch.tmp"; // Save GPU  | sed -e 's/^[ \t]*//' 
         const char* kernel = "uname -r >> /tmp/freefetch.tmp"; // Save Kernel name and version
         const char* hostname = "cat /etc/hostname >> /tmp/freefetch.tmp"; // Save hostname
         string commands[] = {mem, cpu, gpu, kernel, hostname};
@@ -83,10 +83,30 @@ void imagesDistros(){
     #else
         char* Debian = "cat /tmp/freefetch.tmp | grep 'Debian' >> /dev/null";       //define all distro's
         char* Arch = "cat /tmp/freefetch.tmp | grep 'Arch' >> /dev/null";
-        char* Ubuntu = "cat /tmp/freefetch.tmp | grep 'Ubuntu' >> /dev/null";
+        char* Windows = "cat /tmp/freefetch.tmp | grep 'Windows' >> /dev/null";
 
         if (system("cat /tmp/freefetch.tmp | grep 'Debian' >> /dev/null") == 0) {
-            cout << "Debian" << endl;
+            char* debianLogo = "\n"
+                                "        _,met$$$$$gg.                  \n"
+                                "        ,g$$$$$$$$$$$$$$$P.            \n"
+                                "    ,g$$P"        """Y$$.\".            \n"
+                                "    ,$$P'              `$$$.           \n"
+                                "    ',$$P       ,ggs.     `$$b:        \n"
+                                "    `d$$'     ,$P\"'   .    $$$         \n"
+                                "    $$P      d$'     ,    $$P          \n"
+                                "    $$:      $$.   -    ,d$$'          \n"
+                                "    $$;      Y$b._   _,d$P'            \n"
+                                "    Y$$.    `.`\"Y$$$$P\"'            \n"
+                                "    `$$b      \"-.__                    \n"
+                                "    `Y$$                               \n"
+                                "    `Y$$.                              \n"
+                                "        `$$b.                          \n"
+                                "        `Y$$b.                         \n"
+                                "            `\"Y$b._                    \n"
+                                "                `\"\"\"\"\";           \n";
+                                            
+            
+            cout << debianLogo << endl;
         } 
         else if (system("cat /tmp/freefetch.tmp | grep 'Arch' >> /dev/null") == 0) {
             char* archLinux =   "                         -`                        \n"
