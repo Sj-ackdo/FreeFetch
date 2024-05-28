@@ -84,8 +84,17 @@ void imagesDistros(){
         char* Debian = "cat /tmp/freefetch.tmp | grep 'Debian' >> /dev/null";       //define all distro's
         char* Arch = "cat /tmp/freefetch.tmp | grep 'Arch' >> /dev/null";
         char* Windows = "cat /tmp/freefetch.tmp | grep 'Windows' >> /dev/null";
+        if(system(Windows) == 0) {
+            char* windowsLogo = "  _____ _                 _     _            _    _ \n"
+                                " / ____| |               | |   | |          | |  | |\n"
+                                "| |    | | ___  _   _  __| | __| | ___ _ __ | |__| |\n"
+                                "| |    | |/ _ \\| | | |/ _` |/ _` |/ _ \\ '_ \\|  __  |\n"
+                                "| |____| | (_) | |_| | (_| | (_| |  __/ | | | |  | |\n"
+                                " \\_____|_|\\___/ \\__,_|\\__,_|\\__,_|\\___|_| |_|_|  |_|\n";
+            cout << windowsLogo << endl;
+        }
 
-        if (system("cat /tmp/freefetch.tmp | grep 'Debian' >> /dev/null") == 0) {
+        if (system(Debian) == 0) {
             char* debianLogo = "\n"
                                 "        _,met$$$$$gg.                  \n"
                                 "        ,g$$$$$$$$$$$$$$$P.            \n"
@@ -108,7 +117,7 @@ void imagesDistros(){
             
             cout << debianLogo << endl;
         } 
-        else if (system("cat /tmp/freefetch.tmp | grep 'Arch' >> /dev/null") == 0) {
+        else if (system(Arch) == 0) {
             char* archLinux =   "                         -`                        \n"
                                 "                        .o+`                       \n"
                                 "                        ooo/                       \n"
